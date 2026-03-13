@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>九州旅行行程</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#faf6f1;--bg2:#fff;--bg3:#f5efe8;
+  --text:#2d2520;--text2:#6b5e54;--text3:#9e8e82;
+  --accent:#c44569;--accent2:#e77f8f;--accent-soft:#fce4ec;
+  --must:#c44569;--must-bg:#fce4ec;--must-border:#f1a7b5;
+  --opt:#4a7c6f;--opt-bg:#e8f5e9;--opt-border:#a5d6a7;
+  --hotel:#5c6bc0;--hotel-bg:#e8eaf6;--hotel-border:#9fa8da;
+  --shadow:0 2px 12px rgba(45,37,32,.08);
+  --shadow2:0 4px 20px rgba(45,37,32,.12);
+  --radius:14px;--radius-sm:10px;
+  --font-body:'Noto Sans TC',sans-serif;
+  --font-jp:'Zen Maru Gothic','Noto Sans TC',sans-serif;
+  --complete-bg:#f0ede8;--complete-text:#b5aa9e;
+  --tab-active:#c44569;--tab-inactive:transparent;
+  --divider:#e8dfd6;
+  --progress-bg:#e8dfd6;--progress-fill:#c44569;
+  --note-bg:#fdf8f0;--note-text:#8b7355;
+  --map-btn:#e67e22;--map-btn-hover:#d35400;
+}
+.dark{
+  --bg:#1a1614;--bg2:#252120;--bg3:#302a27;
+  --text:#ede5dd;--text2:#b5aa9e;--text3:#7a6e63;
+  --accent:#e77f8f;--accent2:#c44569;--accent-soft:#3d1f2a;
+  --must:#e77f8f;--must-bg:#3d1f2a;--must-border:#6b2f3f;
+  --opt:#81c784;--opt-bg:#1b3a2a;--opt-border:#2e6b3e;
+  --hotel:#9fa8da;--hotel-bg:#1f2340;--hotel-border:#3f4580;
+  --shadow:0 2px 12px rgba(0,0,0,.3);
+  --shadow2:0 4px 20px rgba(0,0,0,.4);
+  --complete-bg:#2a2623;--complete-text:#5c544c;
+  --divider:#3a332e;
+  --progress-bg:#3a332e;--progress-fill:#e77f8f;
+  --note-bg:#2e2822;--note-text:#b5a07a;
+  --map-btn:#e67e22;--map-btn-hover:#f39c12;
+}
+
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--text);
+  min-height:100vh;min-height:100dvh;overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
+
+/* ── HEADER ── */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:linear-gradient(135deg,var(--accent),#e96d7b);
+  color:#fff;padding:16px 16px 0;
+  box-shadow:0 4px 24px rgba(196,69,105,.25);
+}
+.dark .header{background:linear-gradient(135deg,#3d1f2a,#502535)}
+.header-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.header-icon{font-size:1.6rem}
+.header h1{font-family:var(--font-jp);font-size:1.35rem;font-weight:700;letter-spacing:.5px}
+.header-sub{font-size:.78rem;opacity:.85;margin-top:2px;font-weight:300}
+
+/* ── DATE TABS ── */
+.tabs-wrap{
+  display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;padding-bottom:0;
+}
+.tabs-wrap::-webkit-scrollbar{display:none}
+.tab-btn{
+  flex-shrink:0;padding:8px 14px;border:none;
+  background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);
+  font-family:var(--font-body);font-size:.8rem;font-weight:500;
+  border-radius:10px 10px 0 0;cursor:pointer;
+  transition:all .25s;white-space:nowrap;
+  position:relative;
+}
+.tab-btn.active{
+  background:var(--bg);color:var(--accent);font-weight:700;
+}
+.tab-btn .tab-date{display:block;font-size:.72rem;opacity:.7;margin-top:1px}
+.tab-btn.active .tab-date{opacity:1;color:var(--text2)}
+.tab-progress{
+  display:block;height:3px;border-radius:2px;margin-top:4px;
+  background:rgba(255,255,255,.2);overflow:hidden;
+}
+.tab-btn.active .tab-progress{background:var(--progress-bg)}
+.tab-progress-fill{
+  display:block;height:100%;border-radius:2px;
+  background:rgba(255,255,255,.7);transition:width .4s ease;
+}
+.tab-btn.active .tab-progress-fill{background:var(--progress-fill)}
+
+/* ── MAIN ── */
+.main{padding:12px 12px 100px;max-width:680px;margin:0 auto}
+
+/* ── DAY SECTION ── */
+.day-section{display:none;animation:fadeUp .35s ease}
+.day-section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.day-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0 8px;margin-bottom:6px;
+}
+.day-title{font-family:var(--font-jp);font-size:1.15rem;font-weight:700;color:var(--text)}
+.day-stats{font-size:.75rem;color:var(--text3)}
+.day-stats span{font-weight:600;color:var(--accent)}
+
+.progress-bar{
+  height:6px;border-radius:3px;background:var(--progress-bg);
+  margin-bottom:16px;overflow:hidden;
+}
+.progress-bar-fill{height:100%;border-radius:3px;background:var(--progress-fill);transition:width .5s ease}
+
+/* ── ITEM CARD ── */
+.item-card{
+  background:var(--bg2);border-radius:var(--radius);
+  padding:14px;margin-bottom:10px;
+  box-shadow:var(--shadow);border-left:4px solid transparent;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.item-card.must{border-left-color:var(--must)}
+.item-card.optional{border-left-color:var(--opt)}
+.item-card.hotel{border-left-color:var(--hotel)}
+.item-card.completed{
+  background:var(--complete-bg);opacity:.65;
+}
+.item-card.completed .item-name,.item-card.completed .item-time{
+  text-decoration:line-through;color:var(--complete-text);
+}
+
+.item-top{display:flex;align-items:flex-start;gap:10px}
+.item-check{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  border:2.5px solid var(--text3);background:transparent;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .25s;margin-top:1px;position:relative;
+  -webkit-tap-highlight-color:transparent;
+}
+.item-check:hover{border-color:var(--accent)}
+.item-card.must .item-check{border-color:var(--must-border)}
+.item-card.optional .item-check{border-color:var(--opt-border)}
+.item-card.hotel .item-check{border-color:var(--hotel-border)}
+.item-card.completed .item-check{
+  background:var(--accent);border-color:var(--accent);
+}
+.item-check .fa-check{
+  font-size:.7rem;color:#fff;opacity:0;transition:opacity .2s;
+}
+.item-card.completed .item-check .fa-check{opacity:1}
+
+.item-body{flex:1;min-width:0}
+.item-time{
+  font-size:.72rem;color:var(--text3);font-weight:500;
+  margin-bottom:2px;display:flex;align-items:center;gap:4px;
+}
+.item-time i{font-size:.65rem}
+.item-name{font-size:.95rem;font-weight:600;color:var(--text);line-height:1.4;word-break:break-word}
+
+.item-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.badge{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:2px 8px;border-radius:20px;font-size:.65rem;font-weight:600;
+}
+.badge-must{background:var(--must-bg);color:var(--must)}
+.badge-opt{background:var(--opt-bg);color:var(--opt)}
+.badge-hotel{background:var(--hotel-bg);color:var(--hotel)}
+
+/* ── EXPANDABLE DETAILS ── */
+.item-has-details{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.item-expand-hint{
+  display:inline-flex;align-items:center;gap:4px;
+  margin-top:6px;font-size:.68rem;color:var(--accent);font-weight:500;
+  opacity:.8;transition:opacity .2s;
+}
+.item-has-details:hover .item-expand-hint{opacity:1}
+.item-expand-hint i{font-size:.6rem;transition:transform .3s}
+.item-card.expanded .item-expand-hint i{transform:rotate(180deg)}
+.item-card.expanded .item-expand-hint .hint-text::after{content:"收起詳情"}
+.item-card:not(.expanded) .item-expand-hint .hint-text::after{content:"查看詳情"}
+
+.item-details{
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .35s ease, opacity .25s ease, margin .25s ease;
+  margin-top:0;
+}
+.item-card.expanded .item-details{
+  max-height:300px;opacity:1;margin-top:8px;
+}
+
+.item-note{
+  padding:8px 10px;border-radius:var(--radius-sm);
+  background:var(--note-bg);font-size:.76rem;color:var(--note-text);
+  line-height:1.5;word-break:break-word;
+}
+.item-note i{margin-right:4px}
+
+.item-address{
+  margin-top:6px;font-size:.72rem;color:var(--text3);
+  display:flex;align-items:flex-start;gap:4px;line-height:1.4;
+}
+.item-address i{margin-top:2px;flex-shrink:0}
+
+.item-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.map-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:7px 14px;border-radius:20px;border:none;
+  background:var(--map-btn);color:#fff;font-size:.76rem;font-weight:600;
+  cursor:pointer;transition:all .2s;text-decoration:none;
+  font-family:var(--font-body);
+  -webkit-tap-highlight-color:transparent;
+}
+.map-btn:hover{background:var(--map-btn-hover);transform:translateY(-1px)}
+.map-btn i{font-size:.7rem}
+
+/* ── SECTION DIVIDERS ── */
+.time-group{
+  margin-top:16px;margin-bottom:8px;padding-left:4px;
+  display:flex;align-items:center;gap:8px;
+}
+.time-group::after{
+  content:'';flex:1;height:1px;background:var(--divider);
+}
+.time-group-label{
+  font-size:.72rem;font-weight:600;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;
+}
+
+/* ── OTHERS TAB ── */
+.others-section .item-card{border-left-color:var(--text3)}
+.others-cat{
+  font-size:.68rem;color:var(--text3);font-weight:600;
+  text-transform:uppercase;letter-spacing:.5px;
+  margin:16px 0 6px 4px;
+}
+
+/* ── LEGEND ── */
+.legend{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;
+  padding:10px 12px;background:var(--bg2);border-radius:var(--radius-sm);
+  box-shadow:var(--shadow);
+}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.legend-dot.must{background:var(--must)}
+.legend-dot.opt{background:var(--opt)}
+.legend-dot.hotel{background:var(--hotel)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--bg2);color:var(--text);padding:10px 20px;
+  border-radius:30px;box-shadow:var(--shadow2);font-size:.82rem;font-weight:500;
+  z-index:200;opacity:0;transition:all .35s ease;pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── CUSTOM SCROLLBAR ── */
+@media(hover:hover){
+  ::-webkit-scrollbar{width:6px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--text3);border-radius:3px}
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:400px){
+  .header{padding:12px 12px 0}
+  .header h1{font-size:1.15rem}
+  .tab-btn{padding:6px 10px;font-size:.74rem}
+  .item-card{padding:12px}
+  .item-name{font-size:.88rem}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <span class="header-icon">🌸</span>
+    <div>
+      <h1>九州旅行行程表</h1>
+      <div class="header-sub">2025.03.31 — 04.07 ・ 福岡 → 阿蘇 → 由布院 → 別府</div>
+    </div>
+  </div>
+  <div class="tabs-wrap" id="tabsWrap"></div>
+</div>
+
+<div class="main" id="mainContent"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+ 
+// ── DATA ──
+const TRIP_DATA = {
+  days: [
+    {
+      id:"d1", date:"3/31", weekday:"星期二", label:"Day 1", region:"福岡・博多",
+      items:[
+        {time:"06:30",name:"抵達香港國際機場",type:"must"},
+        {time:"08:30",name:"大灣區航空 HB308",type:"must"},
+        {time:"13:00",name:"抵達福岡國際機場",type:"must"},
+        {time:"13:00-15:00",name:"午餐(首選): 烤肉石原牛",type:"optional",note:"營業時間：11:00",address:"Fukuoka, Hakata Ward, Shimokawabatamachi, 3−1 博多リバレイン 1F",mapUrl:"https://maps.app.goo.gl/Eb4pYNTbc4xwkxALA"},
+        {time:null,name:"午餐(次選): 武蔵 (黑毛和牛飯)",type:"optional",note:"營業時間：11:30",address:"Fukuoka, Hakata Ward, Hakataekihigashi, 1-12-1",mapUrl:"https://maps.app.goo.gl/jsSrT9P3BsbozQBA9"},
+        {time:"13:00-18:00",name:"博多運河城",type:"must",address:"1 Chome-2 Sumiyoshi, Hakata Ward, Fukuoka",mapUrl:"https://maps.app.goo.gl/FeijWUfAWQAAX52m9"},
+        {time:null,name:"FUK coffee（雞蛋布甸）",type:"optional",address:"6-22 Gionmachi, Hakata Ward, Fukuoka",mapUrl:"https://maps.app.goo.gl/UMhDGNf9iVAwthng8"},
+        {time:null,name:"Card KINGDOM Hakata (Pokemon卡店)",type:"must",note:"營業時間：12:00-22:00",address:"Fukuoka, Hakata Ward, Sumiyoshi, 1-4-21",mapUrl:"https://maps.app.goo.gl/o9sAYf4a2avvNxhN7"},
+        {time:"晚餐",name:"中洲の屋台街",type:"must",address:"1 Chome-8 Nakasu, Hakata Ward, Fukuoka",mapUrl:"https://maps.app.goo.gl/mH65W7s5HH88LC9W9"},
+        {time:"18:00-21:00",name:"Imonne Hakata（麻糬+Gelato）",type:"optional",note:"營業時間：10:00-21:00",address:"博多マルイ 1F",mapUrl:"https://maps.app.goo.gl/kPiyYm4G9LVUbPzA8"},
+        {time:null,name:"Pokémon Center FUKUOKA",type:"optional",note:"營業時間：10:00-21:00",address:"博多マルイ 2F",mapUrl:"https://maps.app.goo.gl/d8dxW7PkGqf8U5CQA"},
+        {time:"晚上回酒店前",name:"LOPIA 博多友都八喜店（超市）",type:"optional",note:"營業時間：10:00-21:00",address:"ヨドバシ博多 4F",mapUrl:"https://maps.app.goo.gl/E3ce2GgaNJmruStNA"},
+        {time:"住宿",name:"福岡博多東急STAY酒店",type:"hotel",address:"1-11-11 Hakataekiminami, Hakata Ward, Fukuoka",mapUrl:"https://maps.app.goo.gl/uhy2Smdg6vfL5rjG9"}
+      ]
+    },
+    {
+      id:"d2", date:"4/1", weekday:"星期三", label:"Day 2", region:"太宰府・柳川・阿蘇",
+      items:[
+        {time:"07:00",name:"早餐: MIGNON 博多店（牛角包）",type:"optional",address:"JR博多駅構内 1階",mapUrl:"https://maps.app.goo.gl/mi4bMVJmKWpTRB6M6"},
+        {time:null,name:"早餐: Dacomecca（烤腸面包）",type:"optional",address:"Hakata Ekimae 4-14-1",mapUrl:"https://maps.app.goo.gl/9krkhb8PBYzaMoBA9"},
+        {time:"08:00",name:"自駕遊取車: Sky Rent A Car",type:"must",address:"福岡市博多区博多駅東3-11-24",mapUrl:"https://maps.app.goo.gl/m7yz97oH2ELExiZ87"},
+        {time:"8:00-12:00",name:"梅枝餅 松屋",type:"optional",address:"2-6-12 Saifu, Dazaifu",mapUrl:"https://maps.app.goo.gl/ccj6yvwooyagyDzj8"},
+        {time:null,name:"星巴克 太宰府天滿宮表參道店",type:"optional",address:"3-2-43 Saifu, Dazaifu",mapUrl:"https://maps.app.goo.gl/FkqJgZX6sKAdA7EA8"},
+        {time:null,name:"福岡太宰府天滿宮",type:"must",address:"4-7-1 Saifu, Dazaifu",mapUrl:"https://maps.app.goo.gl/hptuyPXyXBiDbBvi6"},
+        {time:null,name:"Coba Café（超濃郁南瓜布丁）",type:"optional",mapUrl:"https://maps.app.goo.gl/cWaePmmLHqSXAnV17"},
+        {time:null,name:"九州國立博物館",type:"must",mapUrl:"https://maps.app.goo.gl/3MkRLQQeZZuejk8w9"},
+        {time:"午餐",name:"一蘭 太宰府參道店",type:"must",note:"營業時間：10:30",address:"2-6-2 Saifu, Dazaifu",mapUrl:"https://maps.app.goo.gl/aiLVVUMqbSAQkFEJ9"},
+        {time:"12:00-17:00",name:"寶滿宮 竈門神社",type:"optional",address:"883 Uchiyama, Dazaifu",mapUrl:"https://maps.app.goo.gl/TvA8LAJ1rhVWaKPK6"},
+        {time:null,name:"柳川遊船",type:"must",address:"329 Mitsuhashimachi Takahatake, Yanagawa",mapUrl:"https://maps.app.goo.gl/AdBJ5tWcJw5YkLGZA"},
+        {time:null,name:"中山大藤（紫藤花）",type:"optional",address:"538-1 Mitsuhashimachi Nakayama, Yanagawa",mapUrl:"https://maps.app.goo.gl/xXMjYnLTCAVRxD149"},
+        {time:"17:00",name:"阿蘇白雲山莊",type:"hotel",note:"沐浴稅（到店付款）¥300",address:"7-1 Muta, Aso, Kumamoto",mapUrl:"https://maps.app.goo.gl/yPNbkdrKLRuqqZjQA"},
+        {time:"17:30-20:30",name:"晚餐 阿蘇白雲山莊（Agoda）",type:"must",note:"最後進入時間 19:30"}
+      ]
+    },
+    {
+      id:"d3", date:"4/2", weekday:"星期四", label:"Day 3", region:"阿蘇・高千穗・由布院",
+      items:[
+        {time:"早餐",name:"早餐 阿蘇白雲山莊",type:"must"},
+        {time:"8:30-17:30",name:"Pig Fluke Café（牛乳雪糕＆咖啡）",type:"must",address:"1031 Nishikozono, Aso, Kumamoto",mapUrl:"https://maps.app.goo.gl/4tqBY7CNy4kVXPjm9"},
+        {time:null,name:"大觀峰展望所",type:"must",address:"2090-8 Yamada, Aso, Kumamoto",mapUrl:"https://maps.app.goo.gl/MUpGbA97ii8W59JC9"},
+        {time:null,name:"草千里展望所",type:"must",address:"1662-9 Akamizu, Aso, Kumamoto",mapUrl:"https://maps.app.goo.gl/qfw6jPtzYk1MmBZn6"},
+        {time:null,name:"草千里（草千里之濱）",type:"must",address:"Kumamoto, Aso, 草千里ヶ浜",mapUrl:"https://maps.app.goo.gl/QYZfqHtGfPjiSmGv8"},
+        {time:null,name:"阿蘇中岳火山口",type:"must",note:"注意事項：aso-volcano.jp/chinese/",address:"Kurokawa, Aso, Kumamoto",mapUrl:"https://maps.app.goo.gl/djYfa213nvoLpzgj8"},
+        {time:null,name:"上色見熊野座神社（250級樓梯）",type:"optional",address:"2619 Kamishikimi, Takamori, Aso District",mapUrl:"https://maps.app.goo.gl/L2ZrZYkwoPPUVzkL9"},
+        {time:"08:30-17:00",name:"高千穗神社",type:"must",address:"1037 Mitai, Takachiho, Miyazaki",mapUrl:"https://maps.app.goo.gl/zmF4BqoXpfYY6irq9"},
+        {time:null,name:"高千穗峽（遊船）",type:"must",note:"營業時間：08:30-17:00",address:"Mukoyama, Takachiho, Miyazaki",mapUrl:"https://maps.app.goo.gl/hEFo78TMwFD795rN9"},
+        {time:"10:20-15:40",name:"高千穂駅（高千穗小火車）",type:"optional",address:"1425-1 Mitai, Takachiho, Miyazaki",mapUrl:"https://maps.app.goo.gl/TpHYa86S1woWDfjx8"},
+        {time:"17:30-22:00",name:"晚餐 CARNE",type:"must",note:"星期日及星期一休息",address:"3725-5 Yufuincho Kawakami, Yufu, Oita",mapUrl:"https://maps.app.goo.gl/J3yXeHmB3EzWGWgf7"},
+        {time:"住宿",name:"由布院温泉 由布之愈 友裏",type:"hotel",note:"沐浴稅 ¥500 | 訂單：1359041951389569 | PIN：2781（Trip）",address:"Oita, Yufu, 湯布院町川上字上新町783-1",mapUrl:"https://maps.app.goo.gl/ApbRUtdamyA1sBqEA"}
+      ]
+    },
+    {
+      id:"d4", date:"4/3", weekday:"星期五", label:"Day 4", region:"由布院・別府",
+      items:[
+        {time:"早餐",name:"Milch Donut & Cafe",type:"must",note:"營業時間: 10:00-16:50",address:"Oita, Yufu, Yufuincho Kawakita",mapUrl:"https://maps.app.goo.gl/hBB8SC136QHBowcD7"},
+        {time:"上午",name:"Milch 布丁",type:"must",note:"營業時間: 10:30-17:30",address:"3015-1 Yufuincho Kawakami, Yufu",mapUrl:"https://maps.app.goo.gl/w6G4685d5xTisPCB6"},
+        {time:null,name:"湯之坪街道",type:"must",address:"1505-6 Yufuincho Kawakami, Yufu"},
+        {time:null,name:"鞠智 cucuchi（銅鑼燒）",type:"must",address:"3001-1 Yufuincho Kawakami, Yufu",mapUrl:"https://maps.app.goo.gl/m5QiiseMc6EtYWtn6"},
+        {time:null,name:"金賞可樂餅",type:"must",address:"1079-8 Yufuincho Kawakami, Yufu",mapUrl:"https://maps.app.goo.gl/s5JsEKYRWdpEhWiXA"},
+        {time:null,name:"湯布院花卉村",type:"must",address:"1503-3 Yufuincho Kawakami, Yufu",mapUrl:"https://maps.app.goo.gl/SMf9dpVRyyrYyuvo8"},
+        {time:null,name:"金鱗湖",type:"must",address:"1561-1 Yufuincho Kawakami, Yufu",mapUrl:"https://maps.app.goo.gl/mNakS7rcpRriJRyy5"},
+        {time:null,name:"天祖神社",type:"must",address:"1750 Yufuincho Kawakami, Yufu",mapUrl:"https://maps.app.goo.gl/xEY61TChkN6hs6aS6"},
+        {time:"午餐",name:"由布まぶし心（和牛釜飯）",type:"must",note:"營業時間: 10:30-17:30（金鱗湖/車站兩店）",address:"1492-1 Yufuincho Kawakami, Yufu",mapUrl:"https://maps.app.goo.gl/M3WZCjeYMBW4AsvB9"},
+        {time:"住宿",name:"美松大江亭海濱酒店",type:"hotel",address:"Oita, Beppu, Kitahama, 3-14-17",mapUrl:"https://maps.app.goo.gl/DsfpVV22SiMdppTq8"},
+        {time:"晚餐",name:"美松大江亭海濱酒店",type:"must"}
+      ]
+    },
+    {
+      id:"d5", date:"4/4", weekday:"星期六", label:"Day 5", region:"別府・北九州・福岡",
+      items:[
+        {time:"早餐",name:"美松大江亭海濱酒店",type:"must"},
+        {time:"09:30-15:00",name:"九州自然動物園",type:"must",note:"早去早享受！10:10 有第一輪餵食巴士",address:"Oita, Usa, Ajimumachi Minamihata, 2-1755-1",mapUrl:"https://maps.app.goo.gl/kYiLYevu43hdQ8wT9"},
+        {time:"10:00-18:00",name:"大分香博物館",type:"must",address:"48-1 Kitaishigaki, Beppu, Oita",mapUrl:"https://maps.app.goo.gl/ckqjWzsyAeivUzV28"},
+        {time:null,name:"THE OUTLETS KITAKYUSHU",type:"optional",note:"營業時間: 10:00-20:00（有多時間才去）",address:"4-1-1 Higashida, Yahatahigashi Ward, Kitakyushu",mapUrl:"https://maps.app.goo.gl/rGyQBscwpykFrLoL9"},
+        {time:null,name:"鳥栖 PREMIUM OUTLETS",type:"optional",note:"營業時間: 10:00-20:00（有多時間才去）",address:"8-1 Yayoigaoka, Tosu, Saga",mapUrl:"https://maps.app.goo.gl/4ob7ozwsFguhKs2G8"},
+        {time:null,name:"海之中道海濱公園",type:"optional",note:"營業時間: 9:30-17:30（大推！花海🌸）",address:"18-25 Saitozaki, Higashi Ward, Fukuoka",mapUrl:"https://maps.app.goo.gl/QQYpTFr5m7SerhzX8"},
+        {time:"晚餐",name:"Sushi Sakaba Sashisu（KITTE Hakata）",type:"must",note:"音樂老師推薦壽司",address:"KITTE博多 B1",mapUrl:"https://maps.app.goo.gl/pjzVqzYrXFh6uCo39"},
+        {time:"20:00",name:"租車退還: Sky Rent A Car",type:"must",address:"福岡市博多区博多駅東3-11-24"},
+        {time:"住宿",name:"福岡博多東急STAY酒店",type:"hotel",address:"1-11-11 Hakataekiminami, Hakata Ward",mapUrl:"https://maps.app.goo.gl/uhy2Smdg6vfL5rjG9"}
+      ]
+    },
+    {
+      id:"d6", date:"4/5", weekday:"星期日", label:"Day 6", region:"福岡市內",
+      items:[
+        {time:"早餐",name:"Dacomecca（烤腸面包）",type:"must",note:"營業時間: 7:00",address:"Hakata Ekimae 4-14-1",mapUrl:"https://maps.app.goo.gl/M1jKQSGYQk8DbveNA"},
+        {time:null,name:"MIGNON 博多店（牛角包）",type:"must",note:"營業時間: 7:00",address:"JR博多駅構内 1階",mapUrl:"https://maps.app.goo.gl/mi4bMVJmKWpTRB6M6"},
+        {time:null,name:"大濠公園",type:"must",address:"Fukuoka, Chuo Ward, Ohorikoen",mapUrl:"https://maps.app.goo.gl/kpUHj6xHLDRJ7XuDA"},
+        {time:null,name:"舞鶴公園 三丸廣場",type:"must",address:"2-2 Jonai, Chuo Ward, Fukuoka",mapUrl:"https://maps.app.goo.gl/7tXi29jLG7Vbx3ou7"},
+        {time:"9:00-11:00",name:"福岡市美術館",type:"must",address:"Fukuoka, Chuo Ward, Ohorikoen, 1-6",mapUrl:"https://maps.app.goo.gl/D4Vd3oqVxVjhxsfF7"},
+        {time:"11:00-19:00",name:"teamLab森林 福岡（KLOOK會平）",type:"must",note:"營業時間: 11:00",address:"BOSS E・ZO FUKUOKA 5F",mapUrl:"https://maps.app.goo.gl/C3AqmtrbDuuEAXNR6"},
+        {time:null,name:"虛擬體驗區 東方匯理銀行（KLOOK會平）",type:"must",note:"營業時間: 11:00",address:"BOSS E・ZO FUKUOKA 6/7F",mapUrl:"https://maps.app.goo.gl/pBacTCh2GTqz2bxM9"},
+        {time:null,name:"王貞治棒球紀念館",type:"must",note:"營業時間: 11:00-19:00",address:"BOSS E・ZO FUKUOKA 4F",mapUrl:"https://maps.app.goo.gl/sM1wthZYn1htURyQA"},
+        {time:"午餐",name:"武蔵（黑毛和牛飯）",type:"must",note:"營業時間: 11:30",address:"Fukuoka, Chuo Ward, Imaizumi, 1-22-18",mapUrl:"https://maps.app.goo.gl/FvcU7Ff9rvF5NnMq8"},
+        {time:null,name:"櫛田神社",type:"optional",address:"1-41 Kamikawabatamachi, Hakata Ward",mapUrl:"https://maps.app.goo.gl/rGLknwSBf4dfb6QU8"},
+        {time:"09:00-16:45",name:"東長寺",type:"optional",address:"2-4 Gokushomachi, Hakata Ward",mapUrl:"https://maps.app.goo.gl/AzPnieQqWqAeVnE57"},
+        {time:null,name:"もち吉博多本店（豆皮麻糬）",type:"optional",address:"2-3 Gokushomachi, Hakata Ward",mapUrl:"https://maps.app.goo.gl/EVrRpBneBarNvSts5"},
+        {time:null,name:"Pokémon Center FUKUOKA",type:"optional",note:"營業時間: 10:00-21:00",address:"博多マルイ 2F",mapUrl:"https://maps.app.goo.gl/QZvprny1hK3suxon8"},
+        {time:"18:00-20:00",name:"LaLaport 福岡（UV 高達）",type:"must",address:"6-23-1 Naka, Hakata Ward",mapUrl:"https://maps.app.goo.gl/H3Q5reKb3VWiYmCJ6"},
+        {time:"晚餐",name:"Yukihana（熟成肉＆海鮮料理専門店）",type:"must",address:"Fukuoka, Chuo Ward, Haruyoshi, 3",mapUrl:"https://maps.app.goo.gl/Xi7aMXdhsUsKaWaDA"},
+        {time:"晚上回酒店前",name:"LOPIA 博多友都八喜店（超市）",type:"optional",note:"營業時間: 10:00-21:00",address:"ヨドバシ博多 4F",mapUrl:"https://maps.app.goo.gl/E3ce2GgaNJmruStNA"},
+        {time:"住宿",name:"福岡博多東急STAY酒店",type:"hotel",address:"1-11-11 Hakataekiminami, Hakata Ward",mapUrl:"https://maps.app.goo.gl/uhy2Smdg6vfL5rjG9"}
+      ]
+    },
+    {
+      id:"d7", date:"4/6", weekday:"星期一", label:"Day 7", region:"福岡・博多",
+      items:[
+        {time:null,name:"Pokémon Center FUKUOKA",type:"must",note:"營業時間: 10:00-21:00",address:"博多マルイ 2F",mapUrl:"https://maps.app.goo.gl/QZvprny1hK3suxon8"},
+        {time:"09:00-17:00",name:"十日惠比須神社",type:"must",address:"7-1 Higashikoen, Hakata Ward",mapUrl:"https://maps.app.goo.gl/y8cb9U7gZHCrP9Td9"},
+        {time:"午餐",name:"Menya ISHII（壽喜燒烏冬）",type:"must",note:"可預訂・人氣店可能排長龍",address:"Hakata Ekimae 3-9-5",mapUrl:"https://maps.app.goo.gl/Bug4YwntDzd5rxdc9"},
+        {time:null,name:"大賀藥局（藥裝）",type:"must",address:"Hakata Ekimae 3-25-21",mapUrl:"https://maps.app.goo.gl/EcAnBTw6d8yFvpKN7"},
+        {time:"晚餐",name:"田中串勝 KITTE Hakata（炸串）",type:"must",address:"Hakataekichuogai 9-1 地下1F",mapUrl:"https://maps.app.goo.gl/ab7frcsrZonhvrjy8"},
+        {time:null,name:"LOPIA 博多友都八喜店（超市）",type:"optional",note:"營業時間: 10:00-21:00",address:"ヨドバシ博多 4F",mapUrl:"https://maps.app.goo.gl/E3ce2GgaNJmruStNA"},
+        {time:"住宿",name:"福岡博多東急STAY酒店",type:"hotel",address:"1-11-11 Hakataekiminami, Hakata Ward",mapUrl:"https://maps.app.goo.gl/uhy2Smdg6vfL5rjG9"}
+      ]
+    },
+    {
+      id:"d8", date:"4/7", weekday:"星期二", label:"Day 8", region:"福岡 → 香港",
+      items:[
+        {time:"09:00",name:"HAKATA EKINAKA SHOPPING（手信名產街 Ming）",type:"must",address:"博多マイング 1階",mapUrl:"https://maps.app.goo.gl/zMcxYD86jJdVWTi19"},
+        {time:"10:00",name:"博多阪急買手信",type:"must",address:"1-1 Hakataekichuogai, Hakata Ward",mapUrl:"https://maps.app.goo.gl/YYvwYEUghiPY7Vh39"},
+        {time:"12:00",name:"抵達福岡國際機場",type:"must"},
+        {time:"14:00",name:"國泰航空 CX513",type:"must",mapUrl:"https://maps.app.goo.gl/31aFZy9PhXDhX3BE7"},
+        {time:"16:45",name:"抵達 HKG 香港國際機場 T1",type:"must"}
+      ]
+    }
+  ],
+  others:[
+    {name:"吉次園（士多啤李）",note:"營業時間: 10:30-17:00",address:"556-1 Uekimachi Kitome, Kita Ward, Kumamoto",mapUrl:"https://maps.app.goo.gl/FKk5LpeZN7arn73V9",cat:"玩"},
+    {name:"福岡塔",note:"營業時間: 9:30-22:00",address:"2-3-26 Momochihama, Sawara Ward, Fukuoka",mapUrl:"https://maps.app.goo.gl/qE3uUWQc5VuzJ8yW7",cat:"玩"},
+    {name:"中央プラザ (2F)",address:"2 Chome Momochihama, Sawara Ward, Fukuoka",mapUrl:"https://maps.app.goo.gl/ojApNQRUUCcs9HNS6",cat:"玩"},
+    {name:"海之中道海濱公園",address:"18-25 Saitozaki, Higashi Ward, Fukuoka",mapUrl:"https://maps.app.goo.gl/QQYpTFr5m7SerhzX8",cat:"玩"},
+    {name:"櫛田神社",address:"1-41 Kamikawabatamachi, Hakata Ward",cat:"玩"},
+    {name:"Yukihana",address:"Fukuoka, Chuo Ward, Haruyoshi, 3-11-19",mapUrl:"https://maps.app.goo.gl/37WHnNxVVSbmTCP17",cat:"食"},
+    {name:"Kawaya Gion かわ屋（燒雞皮）",address:"Fukuoka, Hakata Ward, Gionmachi, 2-8",mapUrl:"https://maps.app.goo.gl/9HinLT6kRCKCRHfg6",cat:"食"},
+    {name:"藥院燒肉",address:"Fukuoka, Chuo Ward, Yakuin, 3-16-34",mapUrl:"https://maps.app.goo.gl/tqi569aXthPuSXLR6",cat:"食"},
+    {name:"藥院燒肉 Nikuichi（炭火）",address:"Fukuoka, Hakata Ward, Hakataekiminami, 1-2-18",mapUrl:"https://maps.app.goo.gl/RqCtVk5sHL13LMZN7",cat:"食"},
+    {name:"Imonne Hakata（麻糬+Gelato）",note:"營業時間: 10:00-21:00",address:"博多マルイ 1F",mapUrl:"https://maps.app.goo.gl/kPiyYm4G9LVUbPzA8",cat:"博多車站"},
+    {name:"LeClerc 可麗露",address:"1-1 Hakataekichuogai, Hakata Ward",mapUrl:"https://maps.app.goo.gl/TT9yy7EQSiuXehXQ7",cat:"博多車站"},
+    {name:"如水庵 博多Ming二號店",address:"1-1 Hakataekichuogai, Hakata Ward",mapUrl:"https://maps.app.goo.gl/26c8bDYtR22v2jWcA",cat:"博多車站"}
+  ]
+};
+
+// ── STORAGE (IndexedDB) ──
+let completedItems = {};
+const DB_NAME = "kyushu_trip";
+const STORE_NAME = "completed";
+
+function openDB() {
+  return new Promise(function(resolve, reject) {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = function() {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    req.onsuccess = function() { resolve(req.result); };
+    req.onerror = function() { reject(req.error); };
+  });
+}
+
+function loadCompleted() {
+  openDB().then(function(db) {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const req = store.get("data");
+    req.onsuccess = function() {
+      if (req.result) {
+        completedItems = req.result;
+      }
+      renderAll();
+    };
+    req.onerror = function() { renderAll(); };
+  }).catch(function() { renderAll(); });
+}
+
+function saveCompleted() {
+  openDB().then(function(db) {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    store.put(completedItems, "data");
+  }).catch(function() { /* no-op */ });
+}
+function getItemId(dayId, idx) { return dayId + "_" + idx; }
+
+// ── TOAST ──
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+// ── RENDER ──
+let activeTab = 0;
+
+function getDayProgress(day) {
+  const total = day.items.length;
+  let done = 0;
+  day.items.forEach((_, i) => {
+    if (completedItems[getItemId(day.id, i)]) done++;
+  });
+  return { total, done, pct: total ? Math.round(done / total * 100) : 0 };
+}
+
+function renderTabs() {
+  const wrap = document.getElementById("tabsWrap");
+  let html = "";
+  TRIP_DATA.days.forEach((day, i) => {
+    const p = getDayProgress(day);
+    html += '<button class="tab-btn' + (i === activeTab ? " active" : "") + '" data-idx="' + i + '">'
+      + '<span>' + day.label + '</span>'
+      + '<span class="tab-date">' + day.date + '</span>'
+      + '<span class="tab-progress"><span class="tab-progress-fill" style="width:' + p.pct + '%"></span></span>'
+      + '</button>';
+  });
+  // Others tab
+  html += '<button class="tab-btn' + (activeTab === TRIP_DATA.days.length ? " active" : "") + '" data-idx="' + TRIP_DATA.days.length + '">'
+    + '<span>其他</span>'
+    + '<span class="tab-date">備選</span>'
+    + '<span class="tab-progress"><span class="tab-progress-fill" style="width:0%"></span></span>'
+    + '</button>';
+  wrap.innerHTML = html;
+  wrap.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+      activeTab = parseInt(this.dataset.idx);
+      renderAll();
+      this.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    });
+  });
+}
+
+function renderItemCard(item, dayId, idx) {
+  const itemId = getItemId(dayId, idx);
+  const done = completedItems[itemId];
+  const cls = item.type === "hotel" ? "hotel" : (item.type === "must" ? "must" : "optional");
+  const badgeCls = item.type === "hotel" ? "badge-hotel" : (item.type === "must" ? "badge-must" : "badge-opt");
+  const badgeText = item.type === "hotel" ? "🏨 住宿" : (item.type === "must" ? "⭐ 必去" : "💫 可選");
+  const hasDetails = item.note || item.address || item.mapUrl;
+
+  let h = '<div class="item-card ' + cls + (done ? " completed" : "") + (hasDetails ? " item-has-details" : "") + '" data-id="' + itemId + '">';
+  h += '<div class="item-top">';
+  h += '<button class="item-check" data-id="' + itemId + '" aria-label="標記完成"><i class="fas fa-check"></i></button>';
+  h += '<div class="item-body">';
+  if (item.time) {
+    h += '<div class="item-time"><i class="far fa-clock"></i> ' + escHtml(item.time) + '</div>';
+  }
+  h += '<div class="item-name">' + escHtml(item.name) + '</div>';
+  h += '<div class="item-badges"><span class="badge ' + badgeCls + '">' + badgeText + '</span></div>';
+  if (hasDetails) {
+    h += '<div class="item-expand-hint"><i class="fas fa-chevron-down"></i> <span class="hint-text"></span></div>';
+    h += '<div class="item-details">';
+    if (item.note) {
+      h += '<div class="item-note"><i class="fas fa-info-circle"></i> ' + escHtml(item.note) + '</div>';
+    }
+    if (item.address) {
+      h += '<div class="item-address"><i class="fas fa-map-marker-alt"></i> <span>' + escHtml(item.address) + '</span></div>';
+    }
+    if (item.mapUrl) {
+      h += '<div class="item-actions"><a class="map-btn" href="' + escHtml(item.mapUrl) + '" target="_blank" rel="noopener"><i class="fas fa-map-location-dot"></i> Google 地圖</a></div>';
+    }
+    h += '</div>';
+  }
+  h += '</div></div></div>';
+  return h;
+}
+
+function renderDay(day, dayIdx) {
+  const p = getDayProgress(day);
+  let h = '<div class="day-section' + (dayIdx === activeTab ? " active" : "") + '" data-day="' + dayIdx + '">';
+  h += '<div class="day-header"><div><div class="day-title">' + escHtml(day.date) + " " + escHtml(day.weekday) + '</div>'
+    + '<div class="day-stats" style="margin-top:2px;font-size:.78rem;color:var(--text3)">'
+    + '<i class="fas fa-route" style="margin-right:3px"></i> ' + escHtml(day.region) + '</div></div>'
+    + '<div class="day-stats"><span>' + p.done + '</span> / ' + p.total + ' 完成</div></div>';
+  h += '<div class="progress-bar"><div class="progress-bar-fill" style="width:' + p.pct + '%"></div></div>';
+
+  h += '<div class="legend">';
+  h += '<div class="legend-item"><div class="legend-dot must"></div>必去行程</div>';
+  h += '<div class="legend-item"><div class="legend-dot opt"></div>可選行程</div>';
+  h += '<div class="legend-item"><div class="legend-dot hotel"></div>住宿</div>';
+  h += '</div>';
+
+  day.items.forEach((item, i) => {
+    h += renderItemCard(item, day.id, i);
+  });
+  h += '</div>';
+  return h;
+}
+
+function renderOthers() {
+  let h = '<div class="day-section others-section' + (activeTab === TRIP_DATA.days.length ? " active" : "") + '">';
+  h += '<div class="day-header"><div class="day-title">其他考慮景點</div></div>';
+
+  const cats = {};
+  TRIP_DATA.others.forEach(item => {
+    const c = item.cat || "其他";
+    if (!cats[c]) cats[c] = [];
+    cats[c].push(item);
+  });
+
+  const catIcons = {"玩":"🎮","食":"🍜","博多車站":"🚉","其他":"📌"};
+  Object.keys(cats).forEach(cat => {
+    h += '<div class="others-cat">' + (catIcons[cat] || "📌") + " " + escHtml(cat) + '</div>';
+    cats[cat].forEach((item, i) => {
+      const itemId = "other_" + cat + "_" + i;
+      const done = completedItems[itemId];
+      const hasDetails = item.note || item.address || item.mapUrl;
+      h += '<div class="item-card' + (done ? " completed" : "") + (hasDetails ? " item-has-details" : "") + '" data-id="' + itemId + '">';
+      h += '<div class="item-top">';
+      h += '<button class="item-check" data-id="' + itemId + '" aria-label="標記完成"><i class="fas fa-check"></i></button>';
+      h += '<div class="item-body">';
+      h += '<div class="item-name">' + escHtml(item.name) + '</div>';
+      if (hasDetails) {
+        h += '<div class="item-expand-hint"><i class="fas fa-chevron-down"></i> <span class="hint-text"></span></div>';
+        h += '<div class="item-details">';
+        if (item.note) {
+          h += '<div class="item-note"><i class="fas fa-info-circle"></i> ' + escHtml(item.note) + '</div>';
+        }
+        if (item.address) {
+          h += '<div class="item-address"><i class="fas fa-map-marker-alt"></i> <span>' + escHtml(item.address) + '</span></div>';
+        }
+        if (item.mapUrl) {
+          h += '<div class="item-actions"><a class="map-btn" href="' + escHtml(item.mapUrl) + '" target="_blank" rel="noopener"><i class="fas fa-map-location-dot"></i> Google 地圖</a></div>';
+        }
+        h += '</div>';
+      }
+      h += '</div></div></div>';
+    });
+  });
+  h += '</div>';
+  return h;
+}
+
+function escHtml(s) {
+  if (!s) return "";
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function renderAll() {
+  renderTabs();
+  const main = document.getElementById("mainContent");
+  let html = "";
+  TRIP_DATA.days.forEach((day, i) => { html += renderDay(day, i); });
+  html += renderOthers();
+  main.innerHTML = html;
+  attachCheckHandlers();
+}
+
+function attachCheckHandlers() {
+  document.querySelectorAll(".item-check").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      const id = this.dataset.id;
+      if (completedItems[id]) {
+        delete completedItems[id];
+        showToast("已取消完成標記 ✏️");
+      } else {
+        completedItems[id] = true;
+        showToast("已標記為完成 ✅");
+      }
+      saveCompleted();
+      renderAll();
+    });
+  });
+
+  // Expand / collapse details on card click
+  document.querySelectorAll(".item-has-details").forEach(card => {
+    card.addEventListener("click", function(e) {
+      // Don't toggle when clicking checkbox or map link
+      if (e.target.closest(".item-check") || e.target.closest(".map-btn")) return;
+      this.classList.toggle("expanded");
+    });
+  });
+}
+
+// ── FORCE LIGHT MODE ──
+document.documentElement.classList.remove("dark");
+
+// ── INIT ──
+// loadCompleted calls renderAll after data is loaded from IndexedDB
+loadCompleted();
+
+// Scroll active tab into view on load
+setTimeout(function() {
+  var activeBtn = document.querySelector(".tab-btn.active");
+  if (activeBtn) activeBtn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+}, 300);
+</script>
+</body>
+</html>
